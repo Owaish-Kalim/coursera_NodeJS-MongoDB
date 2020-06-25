@@ -7,6 +7,7 @@ var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var passport = require('passport');
 var authenticate = require('./authenticate');
+var config = require('./config');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -15,11 +16,14 @@ var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
 
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 
 const Dishes = require('./models/dishes');
 
-const url = 'mongodb://localhost:27017/conFusion';
-const connect = mongoose.connect(url);
+const url = config.mongoUrl;
+const connect = mongoose.connect(url, {
+  useMongoClient: true
+});
 
 connect.then((db) => {
   console.log("Connected correctly to server");
